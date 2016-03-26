@@ -9,9 +9,12 @@
  *
  ***************************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
- #ifndef TEENSY_UART_H
- #define TEENSY_UART_H
+#ifndef TEENSY_UART_H
+#define TEENSY_UART_H
 
 
 #include <stdint.h>
@@ -86,3 +89,7 @@ UART_MemMapPtr uart_pointer(UartChannel_t channel);
 
 
  #endif
+
+#ifdef __cplusplus
+}
+#endif

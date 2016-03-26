@@ -72,7 +72,7 @@ teensy:
 payload: $(BUILD_DIR) | $(OBJECTS) teensy
 	rm -f $(OBJECT_FILE)
 	echo -n " " $(OBJECTS) >> $(OBJECT_FILE)
-	$(CXX) $(LDFLAGS) @$(OBJECT_FILE) @$(TEENSY_OBJECTS) -o $@.elf
+	$(CXX) $(LDFLAGS) @$(TEENSY_OBJECTS) @$(OBJECT_FILE) -o $@.elf
 	$(OBJCOPY) -R .stack -O ihex $@.elf $@.hex
 
 $(BUILD_DIR)/%.o:$(SRC_DIR)/%.cpp

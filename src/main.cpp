@@ -12,24 +12,23 @@
 
 int main(void)
 {
-	//volatile uint32_t n;
-    //uart_init(UART0, 9600);
+    uart_init(UART0, 9600);
 
 	/* Configure PC5 as GPIO (alt = 0x01), and output */
-	//PORTC_PCR5 = PORT_PCR_MUX(0x1);
-	//GPIOC_PDDR = 1 << 5;
-	//GPIOC_PCOR = 1 << 5; /* LED off */
+	PORTC_PCR5 = PORT_PCR_MUX(0x1);
+	GPIOC_PDDR = 1 << 5;
+	GPIOC_PCOR = 1 << 5; /* LED off */
 
-    //uart.Transmit('J');
+	uart_transmit(UART0, (uint8_t)('J'));
 
-    /*if(uart.Receive() == 'J')
+    if(uart_read(UART0) == (uint8_t)('J'))
     {
         GPIOC_PSOR = 1 << 5;
     }
     else
     {
-        GPIOC_PCOR = 1 <<5;
-    }*/
+        //GPIOC_PCOR = 1 << 5;
+    }
 
 	while (1) {
 		//GPIOC_PSOR = 1 << 5; /* LED on */
