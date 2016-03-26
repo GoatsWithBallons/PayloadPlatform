@@ -99,4 +99,5 @@ flash:payload.hex
 	$(UPLOAD) -v -w --mcu=${MCU} $<
 
 clean:
-	rm -r build
+	rm -f -r build
+	rm -f payload.hex payload.elf
