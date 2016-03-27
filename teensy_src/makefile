@@ -32,7 +32,7 @@ ASFLAGS= -mcpu=$(CPU)
 OBJECT_FILE = $(BUILD_LOC)/teensy_objects.tmp
 
 # Source files
-BOARD_C_SRC = arm_cm4.c sysinit.c uart.c
+BOARD_C_SRC = arm_cm4.c sysinit.c uart.c gpio.c
 BOARD_S_SRC = crt0.s
 
 # Final output

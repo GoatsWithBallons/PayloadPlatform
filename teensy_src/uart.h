@@ -88,7 +88,7 @@ void uart_transmit_buffer(UartChannel_t chnl, const uint8_t* buffer, uint16_t nu
 UART_MemMapPtr uart_pointer(UartChannel_t channel);
 
 
- #endif
+#endif
 
 #ifdef __cplusplus
 }
