@@ -49,12 +49,12 @@ LDSCRIPT= $(TEENSY_SRC_DIR)Teensy31_flash.ld
 LDFLAGS= -nostartfiles -T$(LDSCRIPT) -mthumb -mcpu=$(CPU)
 
 # Tools
-CC = arm-none-eabi-gcc
-CXX = arm-none-eabi-g++
-LD = arm-none-eabi-ld
-OBJCOPY = arm-none-eabi-objcopy
-OBJDUMP = arm-none-eabi-objdump
-SIZE = arm-none-eabi-size
+CC = arm-linux-gnueabi-gcc
+CXX = arm-linux-gnueabi-g++
+LD = arm-linux-gnueabi-ld
+OBJCOPY = arm-linux-gnueabi-objcopy
+OBJDUMP = arm-linux-gnueabi-objdump
+SIZE = arm-linux-gnueabi-size
 UPLOAD = teensy_loader_cli
 
 MKDIR_P = mkdir -p
@@ -77,7 +77,7 @@ payload: $(BUILD_DIR) | $(OBJECTS) teensy
 
 $(BUILD_DIR)/%.o:$(SRC_DIR)/%.cpp
 	@echo Compiling $@
-	@$(CXX) -c $(CXXFLAGS) $(INC) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(INC) -o $@ $<
  
 $(BUILD_DIR)/%.o: %.c
 	@echo Compiling $@

@@ -7,7 +7,6 @@
 //###################################################################
 
 
-#include  "teensy_src/teensy3x.h"
 #include "teensy_src/uart.h"
 #include "teensy_src/gpio.h"
 #include "teensy_src/pin_map.h"

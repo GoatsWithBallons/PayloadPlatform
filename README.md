@@ -4,7 +4,7 @@ This repository contains the source code the Goats With Ballons high altitude ba
 
 ## Software Required
 
-* arm-none-eabi-gcc 
+* ARM cross compiler, see http://www.acmesystems.it/arm9_toolchain
 * teensy cli, see https://www.pjrc.com/teensy/loader_cli.html
 
 
