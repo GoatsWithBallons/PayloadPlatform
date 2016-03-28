@@ -30,7 +30,7 @@ SRC_FILES = $(addprefix src/, $(SRC))
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SRC:.cpp=.o))
 
 # Target Output
-TARGET = $(BUILD_DIR)/control-system
+TARGET = payload
 OBJECT_FILE = $(BUILD_DIR)/objects.tmp
 TEENSY_OBJECTS = $(BUILD_DIR)/teensy_objects.tmp
 
@@ -62,14 +62,14 @@ MKDIR_P = mkdir -p
 #####################################################################
 # Build Rules
 
-.PHONY: clean flash dump teensy payload stats
+.PHONY: clean flash dump teensy $(TARGET) stats
 
-all: payload stats
+all: $(TARGET) stats
 
 teensy:
 	$(MAKE) -C $(TEENSY_SRC_DIR) BUILD_LOC=../build OBJECT_LOC=./build
 	
-payload: $(BUILD_DIR) | $(OBJECTS) teensy
+$(TARGET): $(BUILD_DIR) | $(OBJECTS) teensy
 	rm -f $(OBJECT_FILE)
 	echo -n " " $(OBJECTS) >> $(OBJECT_FILE)
 	$(CXX) $(LDFLAGS) @$(TEENSY_OBJECTS) @$(OBJECT_FILE) -o $@.elf
@@ -90,14 +90,14 @@ $(BUILD_DIR):
 # Tool Rules
 
 dump:
-	$(OBJDUMP) -S -D $(BUILD_DIR)/payload.elf > $(BUILD_DIR)/payload.S
+	$(OBJDUMP) -S -D $(BUILD_DIR)/$(TARGET).elf > $(BUILD_DIR)/$(TARGET).S
 
-stats:payload.elf
-	$(SIZE) payload.elf
+stats:$(TARGET).elf
+	$(SIZE) $(TARGET).elf
 
-flash:payload.hex
+flash:$(TARGET).hex
 	$(UPLOAD) -v -w --mcu=${MCU} $<
 
 clean:
 	rm -f -r build
-	rm -f payload.hex payload.elf
+	rm -f $(TARGET).hex $(TARGET).elf

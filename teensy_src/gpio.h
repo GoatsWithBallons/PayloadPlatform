@@ -25,7 +25,7 @@ typedef enum { PORT_A, PORT_B, PORT_C, PORT_D, PORT_E } GPIO_Port_t;
 #define PIN_T GPIO_Port_t port, uint8_t pinNum
 
 /* Defines the states a gpio pin can be in */
-typedef enum { LOGIC_LOW = 0, LOGIC_HIGH= 1 } LogicState_t;
+typedef enum { LOGIC_LOW = 0, LOGIC_HIGH = 1 } LogicState_t;
 
 /* Defines the operating modes a pin can be in */
 typedef enum { GPIO_INPUT, GPIO_OUTPUT, ALT_FUNC_2, ALT_FUNC_3, ALT_FUNC_4, ALT_FUNC_5, ALT_FUNC_6, ALT_FUNC_7 } PinMode_t;
