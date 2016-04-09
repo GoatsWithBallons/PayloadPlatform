@@ -21,7 +21,7 @@ extern "C" {
 #include "common.h"
 
 
-typedef enum { UART0, UART1, UART2 } UartChannel_t;
+typedef enum { UART0 = 0, UART1  = 1, UART2 = 2 } UartChannel_t;
 
 
 /****************************************************************************************

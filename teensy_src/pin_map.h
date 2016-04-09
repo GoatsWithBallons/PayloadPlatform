@@ -4,7 +4,7 @@
  * 		pin_map.h
  *
  * Purpose:
- * 		Provides pin definitins
+ * 		Provides helpful pin definitins
  *
  *
  ***************************************************************************************/
@@ -20,6 +20,12 @@ extern "C" {
 
 #include "gpio.h"
 
+#define RX1		0
+#define TX1		1
+#define RX2		9
+#define TX2		10
+#define RX3		7
+#define TX3		8
 
 #define A0		PORT_A, 0
 #define A1		PORT_A, 1
