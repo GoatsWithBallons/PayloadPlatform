@@ -43,7 +43,7 @@ void gpio_set_mode(uint8_t pin, PinMode_t mode);
 * @param state 		The new logic state.
 *
 ****************************************************************************************/
-void gpio_pin_write(uint8_t pin, LogicState_t state);
+void gpio_write(uint8_t pin, LogicState_t state);
 
 
 /****************************************************************************************
@@ -54,7 +54,7 @@ void gpio_pin_write(uint8_t pin, LogicState_t state);
 * @returns	 		The logic state of the GPIO pin.
 *
 ****************************************************************************************/
-LogicState_t gpio_pin_read(uint8_t pin);
+LogicState_t gpio_read(uint8_t pin);
 
 
 #endif
