@@ -27,6 +27,16 @@ extern "C" {
 #define RX3		7
 #define TX3		8
 
+#define SPI_SCK		14
+#define SPI_DOUT 	11
+#define SPI_DIN		12
+
+#define SPI_CS0		10
+#define SPI_CS1		9
+#define SPI_CS2		20
+#define SPI_CS3		21
+#define SPI_CS4		15
+
 #endif
 
 #ifdef __cplusplus
