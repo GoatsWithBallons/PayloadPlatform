@@ -14,9 +14,9 @@
 #include "common.h"
 #include "gpio.h"
 #include "pin_map.h"
+#include "status_defs.h"
 
-
-int spi_setup = 0;
+int8_t spi_status = STATUS_NOT_INITIALISED;
 
 //-------------------------------------------------------------------------------------//
 void spi_init(SPI_Transfer_Format format)
@@ -50,13 +50,13 @@ void spi_init(SPI_Transfer_Format format)
 	/* Unhalt the module */
 	SPI0_MCR &= ~SPI_MCR_HALT_MASK;
 
-	spi_setup = 1;
+	spi_status = STATUS_OK;
 }
 
 //-------------------------------------------------------------------------------------//
 void spi_write_byte(uint8_t byte)
 {
-	if(spi_setup == 1)
+	if(spi_status != STATUS_NOT_INITIALISED)
 	{
 		/* Flush TX FIFO */
 		SPI0_MCR |= SPI_MCR_CLR_TXF_MASK;
@@ -69,16 +69,12 @@ void spi_write_byte(uint8_t byte)
 		/* Wait for the transfer */
 		while( !(SPI0_SR & SPI_SR_TCF_MASK) );
 	}
-	else
-	{
-		// TODO - Jordan: Set some kind of error reporting
-	}
 }
 
 //-------------------------------------------------------------------------------------//
 uint8_t spi_read()
 {
-	if(spi_setup == 1)
+	if(spi_status != STATUS_NOT_INITIALISED)
 	{
 		/* Flush RX FIFO */
 		SPI0_MCR |= SPI_MCR_CLR_RXF_MASK;
@@ -93,117 +89,125 @@ uint8_t spi_read()
 
 		return SPI0_POPR;
 	}
-	else
-	{
-		// TODO - Jordan: Set some kind of error reporting
-	}
 }
 
 //-------------------------------------------------------------------------------------//
 void spi_write_bytes(uint8_t* buffer, uint16_t length)
 {
-	if(length == 0 || buffer == 0)
+	if(spi_status == STATUS_NOT_INITIALISED)
 	{
 		return;
 	}
 
-	if(spi_setup == 1)
+	if(length == 0 || buffer == 0)
 	{
-		/* Flush TX FIFO */
-		SPI0_MCR |= SPI_MCR_CLR_TXF_MASK;
-
-		uint8_t oddNumber = 0;
-
-		if(length % 2 != 0)
-		{
-			oddNumber = 1;
-		}
-
-		uint16_t temp;
-
-		for(int i = 0; i < length - 2; i+=2)
-		{
-			/* Wait for room in the TX FIFO */
-			while( !(SPI0_SR & SPI_SR_TFFF_MASK) );
-
-			temp = (buffer[i] << 8) | buffer[i + 1];
-			SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(1) | temp;
-
-			/* Clear the end of queue flag, we want to ensure this is reset incase we
-			   we are interrupted. */
-			SPI0_SR |= SPI_SR_EOQF_MASK;
-		}
-
-		/* Transfer the last byte */ 
-		if(oddNumber == 1)
-		{
-			while( !(SPI0_SR & SPI_SR_TFFF_MASK) );
-			SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(0) | buffer[length - 1];
-		}
-
-		/* Wait for transfer to complete */
-		while( !(SPI0_SR & SPI_SR_EOQF_MASK));
+		spi_status = STATUS_EMPTY_NULL_DATA;
+		return;
 	}
-	else
+
+	/* Flush TX FIFO */
+	SPI0_MCR |= SPI_MCR_CLR_TXF_MASK;
+
+	uint8_t oddNumber = 0;
+
+	if(length % 2 != 0)
 	{
-		// TODO - Jordan: Set some kind of error reporting
+		oddNumber = 1;
 	}
+
+	uint16_t temp;
+
+	for(int i = 0; i < length - 2; i+=2)
+	{
+		/* Wait for room in the TX FIFO */
+		while( !(SPI0_SR & SPI_SR_TFFF_MASK) );
+
+		temp = (buffer[i] << 8) | buffer[i + 1];
+		SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(1) | temp;
+
+		/* Clear the end of queue flag, we want to ensure this is reset incase we
+		   we are interrupted. */
+		SPI0_SR |= SPI_SR_EOQF_MASK;
+	}
+
+	/* Transfer the last byte */ 
+	if(oddNumber == 1)
+	{
+		while( !(SPI0_SR & SPI_SR_TFFF_MASK) );
+		SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(0) | buffer[length - 1];
+	}
+
+	/* Wait for transfer to complete */
+	while( !(SPI0_SR & SPI_SR_EOQF_MASK));
 }
 
 //-------------------------------------------------------------------------------------//
 void spi_read_bytes(uint8_t* buffer, uint16_t length)
 {
-	if(length == 0 || buffer == 0)
+	if(spi_status == STATUS_NOT_INITIALISED)
 	{
 		return;
 	}
 
-	if(spi_setup == 1)
+	if(length == 0 || buffer == 0)
 	{
-		/* Flush RX FIFO */
-		SPI0_MCR |= SPI_MCR_CLR_RXF_MASK;
-		SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(1) | 0xFFFF;
+		spi_status = STATUS_EMPTY_NULL_DATA;
+		return;
+	}
 
-		uint8_t oddNumber = 0;
+	/* Flush RX FIFO */
+	SPI0_MCR |= SPI_MCR_CLR_RXF_MASK;
+	SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(1) | 0xFFFF;
 
-		if(length % 2 != 0)
-		{
-			oddNumber = 1;
-		}
+	uint8_t oddNumber = 0;
 
-		uint16_t temp;
+	if(length % 2 != 0)
+	{
+		oddNumber = 1;
+	}
 
-		/* Clears the transfer flag */
+	uint16_t temp;
+
+	/* Clears the transfer flag */
+	SPI0_SR |= SPI_SR_TCF_MASK;
+
+	for(int i = 0; i < length - 2; i+=2)
+	{
+		/* Wait for the transfer */
+		while( !(SPI0_SR & SPI_SR_TCF_MASK) );
 		SPI0_SR |= SPI_SR_TCF_MASK;
 
-		for(int i = 0; i < length - 2; i+=2)
-		{
-			/* Wait for the transfer */
-			while( !(SPI0_SR & SPI_SR_TCF_MASK) );
-			SPI0_SR |= SPI_SR_TCF_MASK;
+		/* Pop off the value from the RX FIFO */
+		temp = SPI0_POPR;
 
-			/* Pop off the value from the RX FIFO */
-			temp = SPI0_POPR;
+		SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(1) | 0xFFFF;
 
-			SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(1) | 0xFFFF;
-
-			buffer[i] = SPI0_POPR >> 8;
-			buffer[i + 1] = SPI0_POPR;
-		}
-
-		/* Transfer the last byte */ 
-		if(oddNumber == 1)
-		{
-			SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(0) | 0xFFFF;
-
-			/* Wait for the transfer */
-			while( !(SPI0_SR & SPI_SR_TCF_MASK) );
-
-			buffer[length - 1] = SPI0_POPR;
-		}
+		buffer[i] = SPI0_POPR >> 8;
+		buffer[i + 1] = SPI0_POPR;
 	}
-	else
+
+	/* Transfer the last byte */ 
+	if(oddNumber == 1)
 	{
-		// TODO - Jordan: Set some kind of error reporting
+		SPI0_PUSHR = SPI_PUSHR_CONT_MASK | SPI_PUSHR_CTAS(0) | 0xFFFF;
+
+		/* Wait for the transfer */
+		while( !(SPI0_SR & SPI_SR_TCF_MASK) );
+
+		buffer[length - 1] = SPI0_POPR;
 	}
+}
+
+//-------------------------------------------------------------------------------------//
+uint8_t spi_module_status()
+{
+	uint8_t status = STATUS_NOT_INITIALISED;
+
+	if(spi_status != STATUS_NOT_INITIALISED)
+	{
+		status = spi_status;
+		spi_status = STATUS_OK;
+	}
+	
+	return status;
 }

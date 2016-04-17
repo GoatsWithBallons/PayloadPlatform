@@ -24,11 +24,6 @@ extern "C" {
 #define CPU_FREQUENCY 72000000 /* 72MHz */
 
 
-typedef enum { 
-	CHNL0 = 0, CHNL1 = 1, CHNL2 = 2, CHNL3 = 3, 
-	CHNL4  = 4, CHNL5 = 5, CHNL6 = 6, CHNL7 = 7, 
-} Pwm_Channel_t;
-
 /****************************************************************************************
 * Initialises the PWM module to a set frequency, currently only the first timer is 
 * implemented.
@@ -39,13 +34,15 @@ typedef enum {
 void pwm_init(uint16_t frequency);
 
 /****************************************************************************************
-* Writes a value into the PWM channel. The GPIO pin still needs to be setup
+* Writes a value into the PWM channel.
 *
-* @param chnl 				The channel.
+* @param pin 				The PWM pin to write to.
 * @param value				The value to write.
 *
 ****************************************************************************************/
-void pwm_write(Pwm_Channel_t chnl, uint16_t value);
+void pwm_write(uint8_t pin, uint16_t value);
+
+uint8_t pwm_status();
 
 
 #endif

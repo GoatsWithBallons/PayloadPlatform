@@ -49,7 +49,8 @@ uint8_t spi_read();
 
 /****************************************************************************************
 * Writes a byte buffer to the SPI TX FIFO which is then transmitted. This function will
-* return when the buffer has been transmitted. The buffer must be big enough.
+* return when the buffer has been transmitted. If the buffer is null or length is 0 then 
+* the module status code will be STATUS_EMPTY_NULL_DATA.
 *
 * @param buffer 			The buffer to transmit.
 * @param length				The number of items in the buffer to transmit.
@@ -58,12 +59,28 @@ uint8_t spi_read();
 void spi_write_bytes(uint8_t* buffer, uint16_t length);
 
 /****************************************************************************************
-* Reads a byte buffer frome the SPI RX FIFO. The buffer must be big enough
+* Reads a byte buffer frome the SPI RX FIFO. If the buffer is null or length is 0 then 
+* the module status code will be STATUS_EMPTY_NULL_DATA.
 *
 * @param buffer 			The buffer to receive data into.
 * @param length				The number of items to receive.
 *
 ****************************************************************************************/
 void spi_read_bytes(uint8_t* buffer, uint16_t length);
+
+/****************************************************************************************
+* Returns SPI module status, possible codes are:
+* 	1	STATUS_OK				: Indicates everything is setup and working
+*	0	STATUS_NOT_INITIALISED	: Indicates the module wasn't initialised, call spi_init
+*	-1	STATUS_EMPTY_NULL_DATA	: A null data pointer or data buffer of size 0 was 
+*								  given to the module.
+*
+* If the status is anything apart from STATUS_NOT_INITIALISED it is reset to STATUS_OK on
+* this functions calling.
+*
+* @returns					A status code.		
+*
+****************************************************************************************/
+uint8_t spi_module_status();
 
 #endif

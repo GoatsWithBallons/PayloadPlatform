@@ -11,6 +11,9 @@
 
 
 #include "pwm.h"
+#include "gpio.h"
+#include "status_defs.h"
+#include "pin_map.h"
 
 /* Register defines */
 
@@ -20,6 +23,8 @@
 #define SC_PS_16			0x4
 #define SC_PS_32			0x5
 
+
+int8_t status = STATUS_NOT_INITIALISED;
 
 //-------------------------------------------------------------------------------------//
 void pwm_init(uint16_t frequency)
@@ -34,11 +39,48 @@ void pwm_init(uint16_t frequency)
 	FTM0_CNT = 0;
 	FTM0_MODE = 1;							/* Enables the FTM */
 	FTM0_OUTMASK = 0x00;
+
+	status = STATUS_OK;
 }
 
 //-------------------------------------------------------------------------------------//
-void pwm_write(Pwm_Channel_t chnl, uint16_t value)
+void pwm_write(uint8_t pin, uint16_t value)
 {
-	FTM0_CnV(chnl) = value; 
+	if(status == STATUS_NOT_INITIALISED)
+	{
+		return;
+	}
+
+	switch(pin)
+	{
+		case PWM0:
+			status = STATUS_PIN_NOT_SUPPORTED;
+			return;
+		break;
+		case PWM1:
+			status = STATUS_PIN_NOT_SUPPORTED;
+			return;
+		break;
+		case PWM2:
+			gpio_set_mode(pin, ALT_FUNC_4);
+			FTM0_CnV(7) = value;
+		break;
+		case PWM3:
+			gpio_set_mode(pin, ALT_FUNC_4);
+			FTM0_CnV(4) = value;
+		break;
+		case PWM4:
+			gpio_set_mode(pin, ALT_FUNC_4);
+			FTM0_CnV(0) = value;
+		break;
+		case PWM5:
+			gpio_set_mode(pin, ALT_FUNC_4);
+			FTM0_CnV(1) = value;
+		break;
+		default:
+			status = STATUS_WRONG_PIN;
+			return;
+	}
+
   	FTM0_SYNC |= 0x80;
 }
