@@ -24,7 +24,7 @@
 #define SC_PS_32			0x5
 
 
-int8_t status = STATUS_NOT_INITIALISED;
+static int8_t status = STATUS_NOT_INITIALISED;
 
 //-------------------------------------------------------------------------------------//
 void pwm_init(uint16_t frequency)
@@ -85,15 +85,15 @@ void pwm_write(uint8_t pin, uint16_t value)
   	FTM0_SYNC |= 0x80;
 }
 
-uint8_t pwm_module_status()
+uint8_t pwm_status()
 {
-	uint8_t status = STATUS_NOT_INITIALISED;
+	uint8_t result = STATUS_NOT_INITIALISED;
 
-	if(spi_status != STATUS_NOT_INITIALISED)
+	if(status != STATUS_NOT_INITIALISED)
 	{
-		status = spi_status;
-		spi_status = STATUS_OK;
+		result = status;
+		status = STATUS_OK;
 	}
 	
-	return status;
+	return result;
 }

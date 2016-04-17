@@ -16,7 +16,7 @@
 #include "pin_map.h"
 #include "status_defs.h"
 
-int8_t spi_status = STATUS_NOT_INITIALISED;
+static int8_t status = STATUS_NOT_INITIALISED;
 
 //-------------------------------------------------------------------------------------//
 void spi_init(SPI_Transfer_Format format)
@@ -50,13 +50,13 @@ void spi_init(SPI_Transfer_Format format)
 	/* Unhalt the module */
 	SPI0_MCR &= ~SPI_MCR_HALT_MASK;
 
-	spi_status = STATUS_OK;
+	status = STATUS_OK;
 }
 
 //-------------------------------------------------------------------------------------//
 void spi_write_byte(uint8_t byte)
 {
-	if(spi_status != STATUS_NOT_INITIALISED)
+	if(status != STATUS_NOT_INITIALISED)
 	{
 		/* Flush TX FIFO */
 		SPI0_MCR |= SPI_MCR_CLR_TXF_MASK;
@@ -74,7 +74,7 @@ void spi_write_byte(uint8_t byte)
 //-------------------------------------------------------------------------------------//
 uint8_t spi_read()
 {
-	if(spi_status != STATUS_NOT_INITIALISED)
+	if(status != STATUS_NOT_INITIALISED)
 	{
 		/* Flush RX FIFO */
 		SPI0_MCR |= SPI_MCR_CLR_RXF_MASK;
@@ -94,14 +94,14 @@ uint8_t spi_read()
 //-------------------------------------------------------------------------------------//
 void spi_write_bytes(uint8_t* buffer, uint16_t length)
 {
-	if(spi_status == STATUS_NOT_INITIALISED)
+	if(status == STATUS_NOT_INITIALISED)
 	{
 		return;
 	}
 
 	if(length == 0 || buffer == 0)
 	{
-		spi_status = STATUS_EMPTY_NULL_DATA;
+		status = STATUS_EMPTY_NULL_DATA;
 		return;
 	}
 
@@ -144,14 +144,14 @@ void spi_write_bytes(uint8_t* buffer, uint16_t length)
 //-------------------------------------------------------------------------------------//
 void spi_read_bytes(uint8_t* buffer, uint16_t length)
 {
-	if(spi_status == STATUS_NOT_INITIALISED)
+	if(status == STATUS_NOT_INITIALISED)
 	{
 		return;
 	}
 
 	if(length == 0 || buffer == 0)
 	{
-		spi_status = STATUS_EMPTY_NULL_DATA;
+		status = STATUS_EMPTY_NULL_DATA;
 		return;
 	}
 
@@ -201,13 +201,13 @@ void spi_read_bytes(uint8_t* buffer, uint16_t length)
 //-------------------------------------------------------------------------------------//
 uint8_t spi_status()
 {
-	uint8_t status = STATUS_NOT_INITIALISED;
+	uint8_t ret = STATUS_NOT_INITIALISED;
 
-	if(spi_status != STATUS_NOT_INITIALISED)
+	if(status != STATUS_NOT_INITIALISED)
 	{
-		status = spi_status;
-		spi_status = STATUS_OK;
+		ret = status;
+		status = STATUS_OK;
 	}
 	
-	return status;
+	return ret;
 }
