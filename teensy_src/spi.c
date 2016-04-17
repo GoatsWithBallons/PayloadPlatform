@@ -199,7 +199,7 @@ void spi_read_bytes(uint8_t* buffer, uint16_t length)
 }
 
 //-------------------------------------------------------------------------------------//
-uint8_t spi_module_status()
+uint8_t spi_status()
 {
 	uint8_t status = STATUS_NOT_INITIALISED;
 
