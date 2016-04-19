@@ -42,19 +42,19 @@ CPU=cortex-m4
 MCU=mk20dx256 # For teensy_loader_cli
 
 CFLAGS= -Wall -g -fno-common -mthumb -mcpu=$(CPU) -std=c99
-CXXFLAGS = -Wall -g -fno-common -mthumb -mcpu=$(CPU) -fno-exceptions -fno-rtti -mfloat-abi=soft
+CXXFLAGS = -Wall -g -fno-common -mthumb -mcpu=$(CPU) -fno-exceptions -fno-rtti -mfloat-abi=soft -nostdlib
 
 
 LDSCRIPT= $(TEENSY_SRC_DIR)Teensy31_flash.ld
-LDFLAGS= -nostartfiles -T$(LDSCRIPT) -mthumb -mcpu=$(CPU)
+LDFLAGS= -nostartfiles -T$(LDSCRIPT) -mthumb -mcpu=$(CPU) -nostdlib
 
 # Tools
-CC = arm-linux-gnueabi-gcc
-CXX = arm-linux-gnueabi-g++
-LD = arm-linux-gnueabi-ld
-OBJCOPY = arm-linux-gnueabi-objcopy
-OBJDUMP = arm-linux-gnueabi-objdump
-SIZE = arm-linux-gnueabi-size
+CC = arm-none-eabi-gcc
+CXX = arm-none-eabi-g++
+LD = arm-none-eabi-ld
+OBJCOPY = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump
+SIZE = arm-none-eabi-size
 UPLOAD = teensy_loader_cli
 
 MKDIR_P = mkdir -p

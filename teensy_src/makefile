@@ -47,8 +47,8 @@ OBJECTS = $(addprefix $(OBJECT_LOC)/, $(BOARD_C_SRC:.c=.o) $(BOARD_S_SRC:.s=.o) 
 
 MKDIR_P = mkdir -p
 
-AS = arm-linux-gnueabi-as
-CC = arm-linux-gnueabi-gcc
+AS = arm-none-eabi-as
+CC = arm-none-eabi-gcc
 
 
 #####################################################################
