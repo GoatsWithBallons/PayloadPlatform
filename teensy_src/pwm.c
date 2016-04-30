@@ -6,6 +6,14 @@
  * Purpose:
  * 		Provides functions for interacting with the teensy FTM module.
  *
+ * Developer Notes:
+ *		The PWM module is setup in edge-aligned mode. The internal counter (FTM_CNT) 
+ *		counts up to the parameter mod provided in pwm_init. When the counter reaches 
+ *		this value the module will send a pulse.
+ *
+ *		The PWM period is determined by (MOD - CNTIN + 1). The counter updaters every 
+ *		8th system clock tick, so 9MHz I believe.
+ *
  *
  ***************************************************************************************/
 
