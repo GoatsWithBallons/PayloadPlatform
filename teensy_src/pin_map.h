@@ -18,8 +18,6 @@ extern "C" {
 #define TEENSY_PIN_MAP_H
 
 
-#include "gpio.h"
-
 /* UART */
 #define RX1		0
 #define TX1		1

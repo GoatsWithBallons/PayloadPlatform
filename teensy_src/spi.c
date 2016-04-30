@@ -12,7 +12,7 @@
 
 #include "spi.h"
 #include "common.h"
-#include "gpio.h"
+#include "io.h"
 #include "pin_map.h"
 #include "status_defs.h"
 
@@ -29,9 +29,9 @@ void spi_init(SPI_Transfer_Format format)
 	SPI0_MCR |= SPI_MCR_HALT_MASK;
 	while( (SPI_SR_TXRXS_MASK & SPI0_SR) );
 
-	gpio_set_mode(SPI_SCK, ALT_FUNC_2);
-	gpio_set_mode(SPI_DOUT, ALT_FUNC_2);
-	gpio_set_mode(SPI_DIN, ALT_FUNC_2);
+	io_set_pin(SPI_SCK, OUTPUT, ALT_FUNC_2);
+	io_set_pin(SPI_DOUT, OUTPUT, ALT_FUNC_2);
+	io_set_pin(SPI_DIN, OUTPUT, ALT_FUNC_2);
 
 	/* Set the SPI mode to master, Set chip select inactive to be logic high */
 	SPI0_MCR |= SPI_MCR_MSTR_MASK | SPI_MCR_PCSIS(0x1F);
@@ -89,6 +89,8 @@ uint8_t spi_read()
 
 		return SPI0_POPR;
 	}
+
+	return 0;
 }
 
 //-------------------------------------------------------------------------------------//

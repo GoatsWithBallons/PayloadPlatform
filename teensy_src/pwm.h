@@ -9,7 +9,7 @@
  *
  ***************************************************************************************/
 
- #ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -28,10 +28,10 @@ extern "C" {
 * Initialises the PWM module to a set frequency, currently only the first timer is 
 * implemented.
 *
-* @param frequency 			The frequency in hertz.
+* @param mod 				The max value that can be written to the PWM module
 *
 ****************************************************************************************/
-void pwm_init(uint16_t frequency);
+void pwm_init(uint16_t mod);
 
 /****************************************************************************************
 * Writes a value into the PWM channel.
@@ -44,5 +44,8 @@ void pwm_write(uint8_t pin, uint16_t value);
 
 uint8_t pwm_status();
 
+#endif
 
+#ifdef __cplusplus
+}
 #endif
