@@ -1,16 +1,17 @@
 /****************************************************************************************
  *
  * File:
- * 		gpio.c
+ * 		io.c
  *
  * Purpose:
- * 		Implements functions for interacting with the GPIO pins.
+ * 		Provides functions for interacting with the teensy pins.
  *
  *
  ***************************************************************************************/
 
 
-#include "gpio.h"
+#include "io.h"
+#include "MK20D7.h"
 
 
 #define SET_BIT(val, bit) val |= (1 << bit)
@@ -196,9 +197,9 @@ uint8_t pin_to_pin_num(uint8_t pin)
 
 
 //-------------------------------------------------------------------------------------//
-void gpio_set_mode(uint8_t pin, PinMode_t mode)
-{
-	uint8_t pinNum = pin_to_pin_num(pin);
+ void io_set_pin(uint8_t pin, PinDir dir, PinFunc func)
+ {
+ 	uint8_t pinNum = pin_to_pin_num(pin);
 
 	PORT_MemMapPtr portPtr = port_base_pointer(pin);
 	GPIO_MemMapPtr basePtr = gpio_base_pointer(pin);
@@ -206,39 +207,20 @@ void gpio_set_mode(uint8_t pin, PinMode_t mode)
 	/* Something has gone wrong */
 	if(basePtr == 0 || portPtr == 0) { return; }
 
-	switch(mode)
+	if(dir == INPUT)
 	{
-		case GPIO_INPUT:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x1);  /* Enable GPIO mode */
-			CLEAR_BIT(basePtr->PDDR, pinNum);		
-		break;
-		case GPIO_OUTPUT:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x1);  /* Enable GPIO mode */
-			SET_BIT(basePtr->PDDR, pinNum);
-		break;
-		case ALT_FUNC_2:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x2);
-		break;
-		case ALT_FUNC_3:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x3);
-		break;
-		case ALT_FUNC_4:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x4);
-		break;
-		case ALT_FUNC_5:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x5);
-		break;
-		case ALT_FUNC_6:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x6);
-		break;
-		case ALT_FUNC_7:
-			portPtr->PCR[pinNum] = PORT_PCR_MUX(0x7);
-		break;
+		CLEAR_BIT(basePtr->PDDR, pinNum);
 	}
-}
+	else
+	{
+		SET_BIT(basePtr->PDDR, pinNum);
+	}
+
+	portPtr->PCR[pinNum] = PORT_PCR_MUX(func);
+ }
 
 //-------------------------------------------------------------------------------------//
-void gpio_write(uint8_t pin, LogicState_t state)
+void io_digital_write(uint8_t pin, LogicLevel logicLevel)
 {
 	uint8_t pinNum = pin_to_pin_num(pin);
 	GPIO_MemMapPtr basePtr = gpio_base_pointer(pin);
@@ -246,7 +228,7 @@ void gpio_write(uint8_t pin, LogicState_t state)
 	/* Something has gone wrong */
 	if(basePtr == 0) { return; }
 
-	if(state == LOGIC_HIGH)
+	if(logicLevel == LOGIC_HIGH)
 	{
 		basePtr->PSOR = 1 << pinNum;
 	}
@@ -257,7 +239,7 @@ void gpio_write(uint8_t pin, LogicState_t state)
 }
 
 //-------------------------------------------------------------------------------------//
-LogicState_t gpio_read(uint8_t pin)
+LogicLevel io_digital_read(uint8_t pin)
 {
 	uint8_t pinNum = pin_to_pin_num(pin);
 	GPIO_MemMapPtr basePtr = gpio_base_pointer(pin);
