@@ -22,24 +22,17 @@ int main(void)
 	io_digital_write(14, LOGIC_LOW);
 
     io_set_pin(13, OUTPUT, GPIO);
-    io_digital_write(13, LOGIC_HIGH);/*
-
-	uart_transmit(UART0, (uint8_t)('J'));
-
-    if(uart_read(UART0) == (uint8_t)('J'))
-    {
-        io_digital_write(13, LOGIC_HIGH);
-    }
-    else
-    {
-        //GPIOC_PCOR = 1 << 5;
-    }*/
+    io_digital_write(13, LOGIC_HIGH);
 
     pwm_init(1000);
-    pwm_write(5, 750);
 
-    while(true) {
-        
+	 while(true) {
+        pwm_write(5, 500);
+        io_digital_write(14, LOGIC_HIGH);
+        for (int i=0; i<1000000; ){i++; }
+        pwm_write(5, 500);
+        io_digital_write(14, LOGIC_LOW);
+        for (int i=0; i<1000000; ){i++; }
     }
     
 	return 0;
