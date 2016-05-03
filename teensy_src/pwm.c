@@ -50,7 +50,7 @@ void pwm_init(uint16_t mod)
 	FTM0_SC = 0;
 
 	// Remove write protection and enable all registers.
-	FTM0_MODE = REG_MODE_WPDIS | REG_MODE_ENABLE;
+	//FTM0_MODE = REG_MODE_WPDIS | REG_MODE_ENABLE;
 
 	FTM0_MOD = mod;
 
