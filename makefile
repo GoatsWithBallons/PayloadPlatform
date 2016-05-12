@@ -20,7 +20,7 @@ TEENSY_SRC_DIR = teensy_src/
 
 
 # Sources
-SRC = main.cpp
+SRC = main.cpp ring_buffer.cpp
 
 INC = -I. -Iinc/
 

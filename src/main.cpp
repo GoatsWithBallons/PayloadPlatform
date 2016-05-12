@@ -11,15 +11,17 @@
 #include "teensy_src/io.h"
 #include "teensy_src/pin_map.h"
 #include "teensy_src/pwm.h"
-
+#include "inc/ring_buffer.h"
 
 int main(void)
 {
+    ring_buffer buffer;
+    ring_buffer_init(buffer);
     //uart_init(UART0, 9600);
 
-	/* Configure PC5 as GPIO and output */
-	io_set_pin(14, OUTPUT, GPIO);
-	io_digital_write(14, LOGIC_LOW);
+    /* Configure PC5 as GPIO and output */
+    io_set_pin(14, OUTPUT, GPIO);
+    io_digital_write(14, LOGIC_LOW);
 
     io_set_pin(13, OUTPUT, GPIO);
     io_digital_write(13, LOGIC_HIGH);
