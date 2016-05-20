@@ -19,6 +19,7 @@ extern "C" {
 
 void adc_init();
 
+void adc_calibrate();
 
 #endif
 
