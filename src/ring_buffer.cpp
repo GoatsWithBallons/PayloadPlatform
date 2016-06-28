@@ -1,5 +1,6 @@
 #include "inc/ring_buffer.h"
 
+/*
 uint8_t incriment(uint8_t index){
     if (index == RING_BUFFER_SIZE){
         index = 0;
@@ -46,7 +47,36 @@ int8_t ring_buffer_read (ring_buffer &buffer, uint8_t *out){
     return (buffer_empty ? 
         RING_BUFFER_EMPTY : 
         RING_BUFFER_OK);
+}*/
+
+uint8_t incriment( uint8_t index, uint8_t size );
+
+uint8_t RingBuffer::Read(){
+
 }
 
+void RingBuffer::Write( uint8_t byte ){
+
+}
+
+void RingBuffer::Flush() {
+    head = tail;
+}
+
+RingBuffer::RingBuffer() : RingBuffer( RING_BUFFER_SIZE ) {}
+RingBuffer::RingBuffer( const uint8_t size ) : data( new uint8_t[size] ), 
+                                               size( size ), 
+                                               head( 0 ), 
+                                               tail( 0 ) {}
+
+
+uint8_t incriment( uint8_t index, uint8_t size ) {
+    if (index == size){
+        index = 0;
+    } else {
+        index += 1;
+    }
+    return index;
+}
 
 

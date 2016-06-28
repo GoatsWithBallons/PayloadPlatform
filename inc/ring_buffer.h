@@ -8,6 +8,7 @@
 #define RING_BUFFER_OK 1
 #define RING_BUFFER_EMPTY -1
 
+/*
 typedef struct {
     uint8_t data[RING_BUFFER_SIZE];
     uint8_t head, tail;
@@ -19,5 +20,22 @@ bool ring_buffer_full (ring_buffer &buffer);
 int8_t ring_buffer_flush (ring_buffer &buffer);
 int8_t ring_buffer_write (ring_buffer &buffer, uint8_t in);
 int8_t ring_buffer_read (ring_buffer &buffer, uint8_t *out);
+*/
+
+class RingBuffer {
+private:
+    uint8_t* data;
+    uint8_t  size, head, tail;
+    
+    uint8_t incriment
+    
+public:
+    RingBuffer();
+    RingBuffer(const uint8_t size);
+    
+    void flush();
+    void write(uint8_t byte);
+    uint8_t read();
+}
 
 #endif
